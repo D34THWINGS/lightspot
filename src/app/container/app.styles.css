@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+  border: solid 1px #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  width: 700px;
+  height: 100%;
+  box-sizing: border-box;
+}
