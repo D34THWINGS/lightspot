@@ -6,6 +6,14 @@
   border-radius: 8px;
   background: #fafafa;
   width: 700px;
-  height: 100%;
+  transition: height .25s ease-in-out;
   box-sizing: border-box;
+}
+
+:host.lightspot--collapsed {
+  height: 55px;
+}
+
+:host.lightspot--expanded {
+  height: 100%;
 }
