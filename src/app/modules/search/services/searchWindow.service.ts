@@ -16,7 +16,7 @@ export class SearchWindowService {
     this.$expanded.next(this.expanded);
   }
 
-  handleSearchChange(inputValue: String): void {
+  public handleSearchChange(inputValue: string): void {
     if ((inputValue.length > 0) === this.expanded) {
       return;
     }
@@ -30,13 +30,13 @@ export class SearchWindowService {
     this.$expanded.next(this.expanded);
   }
 
-  collapseWindow(): void {
+  public collapseWindow(): void {
     const [width, height] = this.window.getSize();
     this.expanded = false;
     this.collapseTimeout = window.setTimeout(() => this.window.setSize(width, height - this.expandValue), 250);
   }
 
-  expandWindow(): void {
+  public expandWindow(): void {
     window.clearTimeout(this.collapseTimeout);
     const [width, height] = this.window.getSize();
     this.window.setSize(width, height + this.expandValue);

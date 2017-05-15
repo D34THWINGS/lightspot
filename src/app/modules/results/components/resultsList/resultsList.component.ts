@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'results-list',
+  styleUrls: ['resultsList.styles.css'],
   template: ``,
-  styleUrls: [ 'resultsList.styles.css' ],
 })
 export class ResultsListComponent {}

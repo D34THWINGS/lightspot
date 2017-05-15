@@ -1,16 +1,15 @@
 import { Component, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { SearchWindowService } from '../modules/search/services/searchWindow.service';
 
 @Component({
+  host: { '[class]': 'lightspotClass' },
   selector: 'lightspot',
+  styleUrls: ['app.styles.css'],
   template: `
     <search></search>
     <results-list></results-list>
   `,
-  styleUrls: ['app.styles.css'],
-  host: { '[class]': 'lightspotClass' },
 })
 export class AppComponent {
   private lightspotClass: string;
