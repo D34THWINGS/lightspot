@@ -17,7 +17,7 @@ export class AppComponent {
   constructor(searchWindowService: SearchWindowService) {
     searchWindowService.$expanded
       .startWith(false)
-      .subscribe(expanded => {
+      .subscribe((expanded) => {
         this.lightspotClass = expanded ? 'lightspot--expanded' : 'lightspot--collapsed';
       });
   }

@@ -1,5 +1,9 @@
 const { app, BrowserWindow, Menu, Tray } = require('electron');
 const path = require('path');
+const robotjs = require('robotjs');
+
+// Expose system mouse position getter for window dragging
+global.getMousePos = () => robotjs.getMousePos();
 
 let win;
 let tray;

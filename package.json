@@ -16,6 +16,7 @@
     "@angular/platform-browser-dynamic": "^4.1.2",
     "core-js": "^2.4.1",
     "electron": "^1.6.7",
+    "robotjs": "^0.4.7",
     "rxjs": "^5.4.0",
     "zone.js": "^0.8.10"
   },
@@ -43,6 +44,7 @@
   "scripts": {
     "build": "webpack --progress",
     "watch": "webpack-dev-server --hot --inline",
-    "start": "electron ."
+    "start": "electron .",
+    "rebuild": "npm rebuild --runtime=electron --target=1.6.7 --disturl=https://atom.io/download/atom-shell --abi=48"
   }
 }
