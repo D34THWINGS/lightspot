@@ -8,7 +8,7 @@ import { SearchWindowService } from '../modules/search/services/searchWindow.ser
   styleUrls: ['app.styles.css'],
   template: `
     <search></search>
-    <results-list></results-list>
+    <results></results>
   `,
 })
 export class AppComponent {

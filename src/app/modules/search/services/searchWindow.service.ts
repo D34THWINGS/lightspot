@@ -6,13 +6,18 @@ import { Subject } from 'rxjs/Subject';
 export class SearchWindowService {
   public $expanded: Subject<boolean> = new Subject();
 
-  private collapseTimeout: number;
   private window: Electron.BrowserWindow;
+  private originalWidth: number;
+  private originalHeight: number;
+  private collapseTimeout: number;
   private expanded: boolean = false;
   private expandValue: number = 300;
 
   constructor() {
     this.window = remote.getCurrentWindow();
+    const { width, height } = remote.getGlobal('originalWindowSize');
+    this.originalWidth = width;
+    this.originalHeight = height;
     this.$expanded.next(this.expanded);
   }
 
@@ -31,15 +36,15 @@ export class SearchWindowService {
   }
 
   public collapseWindow(): void {
-    const [width, height] = this.window.getSize();
     this.expanded = false;
-    this.collapseTimeout = window.setTimeout(() => this.window.setSize(width, height - this.expandValue), 250);
+    this.collapseTimeout = window.setTimeout(() => {
+      this.window.setSize(this.originalWidth, this.originalHeight);
+    }, 250);
   }
 
   public expandWindow(): void {
     window.clearTimeout(this.collapseTimeout);
-    const [width, height] = this.window.getSize();
-    this.window.setSize(width, height + this.expandValue);
+    this.window.setSize(this.originalWidth, this.originalHeight + this.expandValue);
     this.expanded = true;
   }
 }

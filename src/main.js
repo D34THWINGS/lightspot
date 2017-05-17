@@ -5,10 +5,15 @@ const url = require('url');
 let win;
 let tray;
 
+global.originalWindowSize = {
+  width: 750,
+  height: 105,
+};
+
 function createWindow() {
   win = new BrowserWindow({
-    width: 750,
-    height: 105,
+    width: global.originalWindowSize.width,
+    height: global.originalWindowSize.height,
     transparent: true,
     frame: false,
     resizable: false,
@@ -45,7 +50,7 @@ function createTray() {
     { label: 'Quit Lightspot' },
   ]);
 
-  contextMenu.items[1].click = () => app.quit();
+  contextMenu.items[0].click = () => app.quit();
 
   tray.setToolTip('Lightspot');
   tray.setContextMenu(contextMenu);
