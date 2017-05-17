@@ -1,9 +1,6 @@
-const { app, BrowserWindow, Menu, Tray } = require('electron');
+const { app, BrowserWindow, Menu, Tray, globalShortcut } = require('electron');
 const path = require('path');
-const robotjs = require('robotjs');
-
-// Expose system mouse position getter for window dragging
-global.getMousePos = () => robotjs.getMousePos();
+const url = require('url');
 
 let win;
 let tray;
@@ -18,7 +15,11 @@ function createWindow() {
     show: false,
     hasShadow: false,
   });
-  win.loadURL('http://localhost:8080');
+  win.loadURL(process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : url.format({
+    pathname: path.join(__dirname, '../dist/index.html'),
+    protocol: 'file:',
+    slashes: true,
+  }));
   win.webContents.openDevTools();
 
   win.once('ready-to-show', () => {
@@ -28,19 +29,35 @@ function createWindow() {
   win.on('closed', () => {
     win = null;
   });
+}
 
+function toggleWindow() {
+  if (win) {
+    win.close();
+  } else {
+    createWindow();
+  }
+}
+
+function createTray() {
   tray = new Tray(path.join(__dirname, './app/assets/images/tray-icons/spotlightTemplate.png'));
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' },
+    { label: 'Toggle Lightspot', accelerator: 'Esc', click: toggleWindow },
+    { label: 'Quit Lightspot' },
   ]);
-  tray.setToolTip('This is my application.');
+
+  contextMenu.items[1].click = () => app.quit();
+
+  tray.setToolTip('Lightspot');
   tray.setContextMenu(contextMenu);
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  globalShortcut.register('Alt+Space', toggleWindow);
+
+  createTray();
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

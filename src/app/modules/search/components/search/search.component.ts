@@ -12,6 +12,7 @@ const getMousePos: () => { x: number, y: number } = remote.getGlobal('getMousePo
 })
 export class SearchComponent {
   private window: Electron.BrowserWindow;
+  private searchInput: HTMLElement;
 
   constructor(private searchElement: ElementRef) {
     this.window = remote.getCurrentWindow();
@@ -19,29 +20,10 @@ export class SearchComponent {
 
   @HostListener('click')
   public onMouseClick() {
-    const searchInput = document.querySelector('.search-input') as HTMLElement;
-    searchInput.focus();
-  }
+    if (!this.searchInput) {
+      this.searchInput = document.querySelector('.search-input') as HTMLElement;
+    }
 
-  @HostListener('mousedown', ['$event'])
-  public handleWindowDrag(ep: MouseEvent) {
-    const { pageX, pageY } = ep;
-    let dragging = false;
-
-    const moveListener = () => {
-      const { x, y } = getMousePos();
-      this.window.setPosition(x - pageX, y - pageY);
-
-      if (dragging) {
-        window.requestAnimationFrame(moveListener);
-      }
-    };
-
-    dragging = true;
-    window.requestAnimationFrame(moveListener);
-
-    this.searchElement.nativeElement.addEventListener('mouseup', () => {
-      dragging = false;
-    }, { once: true });
+    this.searchInput.focus();
   }
 }

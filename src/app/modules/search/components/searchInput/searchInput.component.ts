@@ -6,7 +6,9 @@ import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'search-input',
   styleUrls: ['searchInput.styles.css'],
-  template: `<input class="search-input" placeholder="What can LightSpot do for you ?" [formControl]="searchBox" />`,
+  template: `
+    <input class="search-input" placeholder="What can LightSpot do for you ?" [formControl]="searchBox" autofocus />
+  `,
 })
 export class SearchInputComponent {
   private searchBox: FormControl = new FormControl();
