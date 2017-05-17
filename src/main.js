@@ -42,7 +42,6 @@ function toggleWindow() {
 function createTray() {
   tray = new Tray(path.join(__dirname, './app/assets/images/tray-icons/spotlightTemplate.png'));
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Toggle Lightspot', accelerator: 'Esc', click: toggleWindow },
     { label: 'Quit Lightspot' },
   ]);
 

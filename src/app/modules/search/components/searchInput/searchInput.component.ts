@@ -7,7 +7,13 @@ import { Observable } from 'rxjs/Observable';
   selector: 'search-input',
   styleUrls: ['searchInput.styles.css'],
   template: `
-    <input class="search-input" placeholder="What can LightSpot do for you ?" [formControl]="searchBox" autofocus />
+    <input
+      class="search-input"
+      placeholder="What can LightSpot do for you ?"
+      [formControl]="searchBox"
+      #searchInput
+      (keyup)="handleKeyUp($event, searchInput.value)"
+      autofocus />
   `,
 })
 export class SearchInputComponent {
@@ -17,6 +23,18 @@ export class SearchInputComponent {
     this.searchBox
       .valueChanges
       .debounceTime(200)
-      .subscribe(event => searchWindowService.handleSearchChange(event));
+      .subscribe((event) => searchWindowService.handleSearchChange(event));
+  }
+
+  private handleKeyUp(e: KeyboardEvent, value: string) {
+    if (e.keyCode !== 27) {
+      return;
+    }
+
+    if (value) {
+      this.searchBox.setValue('');
+    } else {
+      window.close();
+    }
   }
 }

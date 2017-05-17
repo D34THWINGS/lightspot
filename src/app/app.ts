@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Handle click in empty space
-document.addEventListener('click', (e) => {
+document.addEventListener('click', (e: MouseEvent) => {
   if (e.target === document.body) {
     window.close();
   }
