@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SearchWindowService } from '../../services/searchWindow.service';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'search-input',

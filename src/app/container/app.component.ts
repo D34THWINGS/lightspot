@@ -1,9 +1,18 @@
-import { Component, HostBinding } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { Component } from '@angular/core';
 
 import { SearchWindowService } from '../modules/search/services/searchWindow.service';
 
 @Component({
-  host: { '[class]': 'lightspotClass' },
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate(250),
+      ]),
+    ]),
+  ],
+  host: { '[class]': 'lightspotClass', '[@fadeIn]': '' },
   selector: 'lightspot',
   styleUrls: ['app.styles.css'],
   template: `

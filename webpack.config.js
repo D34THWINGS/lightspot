@@ -1,13 +1,14 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const helpers = require('./config/helpers.js');
 
 const atModuleRegExp = /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/;
 
-module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+module.exports = ({ production } = {}) => ({
+  devtool: production ? 'source-map' : 'cheap-module-eval-source-map',
 
   output: {
     path: helpers.root('dist'),
@@ -60,5 +61,17 @@ module.exports = {
       template: 'src/index.html',
     }),
     new ExtractTextPlugin('[name].css'),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/assets',
+        to: 'assets',
+      },
+      {
+        from: 'src/main.js',
+      },
+      {
+        from: 'package.json',
+      },
+    ]),
   ],
-};
+});

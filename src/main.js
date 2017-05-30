@@ -5,6 +5,8 @@ const url = require('url');
 let win;
 let tray;
 
+const isDev = process.env.NODE_ENV === 'dev';
+
 global.originalWindowSize = {
   width: 750,
   height: 105,
@@ -19,13 +21,23 @@ function createWindow() {
     resizable: false,
     show: false,
     hasShadow: false,
+    skipTaskbar: true,
+    fullscreenable: false,
+    webPreferences: {
+      devTools: isDev,
+    },
   });
-  win.loadURL(process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : url.format({
-    pathname: path.join(__dirname, '../dist/index.html'),
-    protocol: 'file:',
-    slashes: true,
-  }));
-  win.webContents.openDevTools();
+
+  if (isDev) {
+    win.loadURL('http://localhost:8080');
+    win.webContents.openDevTools();
+  } else {
+    win.loadURL(url.format({
+      pathname: path.join(__dirname, './index.html'),
+      protocol: 'file:',
+      slashes: true,
+    }));
+  }
 
   win.once('ready-to-show', () => {
     win.show();
@@ -45,7 +57,7 @@ function toggleWindow() {
 }
 
 function createTray() {
-  tray = new Tray(path.join(__dirname, './app/assets/images/tray-icons/spotlightTemplate.png'));
+  tray = new Tray(path.join(__dirname, './assets/images/tray-icons/spotlightTemplate.png'));
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Quit Lightspot' },
   ]);

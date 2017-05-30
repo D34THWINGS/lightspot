@@ -9,6 +9,7 @@
   height: 55px;
   transition: height .25s cubic-bezier(0.22, 0.61, 0.36, 1);
   box-sizing: border-box;
+  opacity: 1;
 }
 
 :host.lightspot--collapsed {
