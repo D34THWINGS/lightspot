@@ -25,7 +25,7 @@
   position: relative;
   display: flex;
   margin-left: 25px;
-  color: #cccccc;
+  color: #333333;
 }
 
 .search-input__hint::before {
@@ -34,7 +34,7 @@
   left: -18px;
   display: block;
   content: ' ';
-  border-top: solid 1px #cccccc;
+  border-top: solid 1px #888888;
   width: 14px;
 }
 
