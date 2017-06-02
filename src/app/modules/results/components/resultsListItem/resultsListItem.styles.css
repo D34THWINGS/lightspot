@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.result-item__icon {
+  flex: 0 0 40px;
+}
+
+.result-item__title {
+  flex: 1;
+  padding: 6px;
+  font-size: 0.8rem;
+}

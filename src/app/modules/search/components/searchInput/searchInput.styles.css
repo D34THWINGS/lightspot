@@ -1,11 +1,49 @@
 :host {
+  position: relative;
   display: block;
   flex: 1;
   margin-left: 10px;
   align-self: stretch;
 }
 
-.search-input {
+.search-input__autocomplete {
+  position: absolute;
+  top: 5px;
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  font-family: 'Roboto', system-ui, sans-serif;
+  font-weight: lighter;
+}
+
+.search-input__matching {
+  font-size: 25px;
+  color: #cccccc;
+}
+
+.search-input__hint {
+  position: relative;
+  display: flex;
+  margin-left: 25px;
+  color: #cccccc;
+}
+
+.search-input__hint::before {
+  position: absolute;
+  top: 10px;
+  left: -18px;
+  display: block;
+  content: ' ';
+  border-top: solid 1px #cccccc;
+  width: 14px;
+}
+
+.search-input__hint:empty::before {
+  display: none;
+}
+
+.search-input__input {
+  position: relative;
   display: block;
   outline: none;
   border: 0;

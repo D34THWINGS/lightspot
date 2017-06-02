@@ -21,7 +21,7 @@ export class SearchComponent {
   @HostListener('click')
   public onMouseClick() {
     if (!this.searchInput) {
-      this.searchInput = document.querySelector('.search-input') as HTMLElement;
+      this.searchInput = document.querySelector('.search-input__input') as HTMLElement;
     }
 
     this.searchInput.focus();

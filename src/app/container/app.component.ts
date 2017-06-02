@@ -8,7 +8,7 @@ import { SearchWindowService } from '../modules/search/services/searchWindow.ser
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate(250),
+        animate(150),
       ]),
     ]),
   ],
@@ -24,8 +24,7 @@ export class AppComponent {
   private lightspotClass: string;
 
   constructor(searchWindowService: SearchWindowService) {
-    searchWindowService.$expanded
-      .startWith(false)
+    searchWindowService.getExpandedObservable()
       .subscribe((expanded) => {
         this.lightspotClass = expanded ? 'lightspot--expanded' : 'lightspot--collapsed';
       });
