@@ -10,7 +10,7 @@
   position: absolute;
   top: 5px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   width: 100%;
   font-family: 'Roboto', system-ui, sans-serif;
   font-weight: lighter;
@@ -19,6 +19,7 @@
 .search-input__matching {
   font-size: 25px;
   color: #cccccc;
+  white-space: pre;
 }
 
 .search-input__hint {
@@ -30,8 +31,8 @@
 
 .search-input__hint::before {
   position: absolute;
-  top: 10px;
-  left: -18px;
+  top: 9px;
+  left: -20px;
   display: block;
   content: ' ';
   border-top: solid 1px #888888;
