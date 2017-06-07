@@ -8,10 +8,10 @@
 
 .search-input__autocomplete {
   position: absolute;
-  top: 5px;
   display: flex;
   align-items: center;
   width: 100%;
+  height: 100%;
   font-family: 'Roboto', system-ui, sans-serif;
   font-weight: lighter;
 }
@@ -25,22 +25,22 @@
 .search-input__hint {
   position: relative;
   display: flex;
-  margin-left: 25px;
+  margin-left: 5px;
   color: #333333;
 }
 
-.search-input__hint::before {
+.search-input__hint--dashed {
+  margin-left: 25px;
+}
+
+.search-input__hint--dashed::before {
   position: absolute;
-  top: 9px;
+  top: 11px;
   left: -20px;
   display: block;
   content: ' ';
   border-top: solid 1px #888888;
   width: 14px;
-}
-
-.search-input__hint:empty::before {
-  display: none;
 }
 
 .search-input__input {

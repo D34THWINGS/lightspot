@@ -12,7 +12,7 @@ import { ResultsService } from '../../../results/services/results.service';
   template: `
     <div class="search-input__autocomplete">
       <span class="search-input__matching">{{$matchingText | async}}</span>
-      <span class="search-input__hint">{{$hintText | async}}</span>
+      <span class="{{$hintClass | async}}">{{$hintText | async}}</span>
     </div>
     <input
       class="search-input__input"
@@ -25,6 +25,7 @@ import { ResultsService } from '../../../results/services/results.service';
 export class SearchInputComponent {
   private $matchingText: Observable<string>;
   private $hintText: Observable<string>;
+  private $hintClass: Observable<string>;
   private searchBox: FormControl = new FormControl();
   private keyUpListener: EventEmitter<KeyboardEvent> = new EventEmitter();
 
@@ -33,24 +34,29 @@ export class SearchInputComponent {
       .valueChanges
       .subscribe((value) => searchInputService.pushValue(value));
 
+    const $inputValue = searchInputService.getInputObservable();
+    $inputValue.connect();
+
     const $firstResultTitle = resultsService.getResultsObservable()
       .map((results: IResult[]): string => results[0] ? results[0].title : null);
 
     this.$matchingText = $firstResultTitle.combineLatest(
-      searchInputService.getInputObservable(),
+      $inputValue,
       (title: string, value: string): string =>
         (!title || !this.startsWith(title, value)) ? value : value + title.slice(value.length),
     );
     this.$hintText = $firstResultTitle.combineLatest(
-      searchInputService.getInputObservable(),
+      $inputValue,
       (title: string, value: string): string => (title && !this.startsWith(title, value)) ? title : '',
     );
+    this.$hintClass = resultsService.getResultsObservable()
+      .map(([result]: IResult[]): string => `search-input__hint${!result || result.removeDash ? '' : '--dashed'}`);
 
     // Handle escape key
-    const $escapeKey = searchInputService.getInputObservable()
-      .sample(this.keyUpListener.filter((e: KeyboardEvent): boolean => e.keyCode === 27))
-      .do((value: string): void => {
-        if (!value) {
+    const $escapeKey = this.keyUpListener
+      .filter((e: KeyboardEvent): boolean => e.keyCode === 27)
+      .do((): void => {
+        if (!this.searchBox.value) {
           window.close();
         }
       })
@@ -58,16 +64,16 @@ export class SearchInputComponent {
 
     // Handle right key
     const $rightKey = this.$matchingText
-      .combineLatest(searchInputService.getInputObservable(), (matching: string, value: string): string => {
-        return matching === value ? value : matching;
-      })
-      .sample(this.keyUpListener.filter((e: KeyboardEvent): boolean => e.keyCode === 39));
+      .sample(this.keyUpListener.filter((e: KeyboardEvent): boolean => e.keyCode === 39))
+      .filter((matching: string): boolean => matching !== this.searchBox.value);
 
     // Pipe input modifiers
-    Observable.merge($escapeKey, $rightKey).subscribe((value: string): void => this.searchBox.setValue(value));
+    Observable.merge($escapeKey, $rightKey, $inputValue.first())
+      .subscribe((value: string): void => this.searchBox.setValue(value));
   }
 
   private startsWith(a: string, b: string): boolean {
-    return (new RegExp(`^${b}`, 'i')).test(a);
+    const escaped = b.replace(/[\-\[\]\/{}()*+?.\\^$|]/g, '\\$&');
+    return (new RegExp(`^${escaped}`, 'i')).test(a);
   }
 }
