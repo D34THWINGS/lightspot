@@ -53,44 +53,49 @@ export class LauncherService {
 
   public indexApplications() {
     this.applications = [];
-    (function recursiveIndexing(path: string): Promise<any> {
-      return readdir(path).then((files: string[]) => {
-        return Promise.all(files.map((file) => {
-          if (/\.app$/.test(file)) {
-            return Promise.resolve(`${path}/${file}`);
-          }
-
-          if (/\.[\w]+$/.test(file)) {
-            return Promise.resolve();
-          }
-
-          return stat(`${path}/${file}`).then((fileStats: fs.Stats) => {
-            if (fileStats.isDirectory()) {
-              return recursiveIndexing(`${path}/${file}`);
-            }
-
-            return Promise.resolve();
-          });
-        }));
-      });
-    })('/Applications')
+    this.recursiveIndexing('/Applications')
       .then((apps: string[]) => {
-        this.applications = (function recursiveFlatten(tmpApps) {
-          return tmpApps.reduce((acc, app) => {
-            if (Array.isArray(app)) {
-              acc.push(...recursiveFlatten(app));
-            } else if (typeof app === 'undefined') {
-              return acc;
-            } else {
-              acc.push(app);
-            }
-
-            return acc;
-          }, []);
-        })(apps).map((app) => ({
-          name: app.match(/.+\/(.+)\.app$/)[1],
-          path: app,
-        }));
+        this.applications = this.recursiveFlatten(apps)
+          .map((app) => ({
+            name: app.match(/.+\/(.+)\.app$/)[1],
+            path: app,
+          }));
       });
+  }
+
+  private recursiveIndexing(path: string): Promise<any> {
+    return readdir(path).then((files: string[]) => {
+      return Promise.all(files.map((file) => {
+        if (/\.app$/.test(file)) {
+          return Promise.resolve(`${path}/${file}`);
+        }
+
+        if (/\.[\w]+$/.test(file)) {
+          return Promise.resolve();
+        }
+
+        return stat(`${path}/${file}`).then((fileStats: fs.Stats) => {
+          if (fileStats.isDirectory()) {
+            return this.recursiveIndexing(`${path}/${file}`);
+          }
+
+          return Promise.resolve();
+        });
+      }));
+    });
+  }
+
+  private recursiveFlatten(tmpApps: string[]): string[] {
+    return tmpApps.reduce((acc, app) => {
+      if (Array.isArray(app)) {
+        acc.push(...this.recursiveFlatten(app));
+      } else if (typeof app === 'undefined') {
+        return acc;
+      } else {
+        acc.push(app);
+      }
+
+      return acc;
+    }, []);
   }
 }
