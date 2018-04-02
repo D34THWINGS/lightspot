@@ -1,7 +1,8 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, ElementRef, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
+import { AppWindowService } from '../../../global/services/appWindow.service';
 import { SearchInputService } from '../../../global/services/searchInput.service';
 import { IResult } from '../../../results/interfaces/result.interface';
 import { ResultsService } from '../../../results/services/results.service';
@@ -29,7 +30,12 @@ export class SearchInputComponent {
   private searchBox: FormControl = new FormControl();
   private keyUpListener: EventEmitter<KeyboardEvent> = new EventEmitter();
 
-  constructor(searchInputService: SearchInputService, resultsService: ResultsService) {
+  constructor(
+    searchInputService: SearchInputService,
+    resultsService: ResultsService,
+    appWindowService: AppWindowService,
+    elementRef: ElementRef,
+  ) {
     this.searchBox
       .valueChanges
       .subscribe((value) => searchInputService.pushValue(value));
@@ -57,7 +63,7 @@ export class SearchInputComponent {
       .filter((e: KeyboardEvent): boolean => e.keyCode === 27)
       .do((): void => {
         if (!this.searchBox.value) {
-          window.close();
+          appWindowService.setVisibility(false);
         }
       })
       .mapTo('');
@@ -70,6 +76,13 @@ export class SearchInputComponent {
     // Pipe input modifiers
     Observable.merge($escapeKey, $rightKey, $inputValue.first())
       .subscribe((value: string): void => this.searchBox.setValue(value));
+
+    // Handle focus back on lightspot
+    appWindowService.getVisibilityObservable()
+      .filter((visible) => visible)
+      .subscribe(() => {
+        elementRef.nativeElement.querySelector('.search-input__input').focus();
+      });
   }
 
   private startsWith(a: string, b: string): boolean {

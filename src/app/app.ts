@@ -16,18 +16,4 @@ window.addEventListener('focus', () => {
   }
 });
 
-if (process.env.NODE_ENV === 'production') {
-  // Handle blur from window
-  window.addEventListener('blur', () => {
-    window.close();
-  });
-}
-
-// Handle click in empty space
-document.addEventListener('click', (e: MouseEvent) => {
-  if (e.target === document.body) {
-    window.close();
-  }
-});
-
 platformBrowserDynamic().bootstrapModule(AppModule);

@@ -19,3 +19,7 @@
 :host.lightspot--expanded {
   height: 100%;
 }
+
+:host.lightspot--hidden {
+  display: none;
+}

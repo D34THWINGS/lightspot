@@ -2,7 +2,14 @@ const { app, BrowserWindow, Menu, Tray, globalShortcut } = require('electron');
 const path = require('path');
 const url = require('url');
 
+/**
+ * @type {BrowserWindow}
+ */
 let win;
+
+/**
+ * @type {Tray}
+ */
 let tray;
 
 const isDev = process.env.NODE_ENV === 'dev';
@@ -11,6 +18,8 @@ global.originalWindowSize = {
   width: 750,
   height: 105,
 };
+
+app.dock.hide();
 
 function createWindow() {
   win = new BrowserWindow({
@@ -23,10 +32,13 @@ function createWindow() {
     hasShadow: false,
     skipTaskbar: true,
     fullscreenable: false,
+    alwaysOnTop: true,
     webPreferences: {
       devTools: isDev,
     },
   });
+
+  win.setVisibleOnAllWorkspaces(true);
 
   if (isDev) {
     win.loadURL('http://localhost:8080');
@@ -50,7 +62,7 @@ function createWindow() {
 
 function toggleWindow() {
   if (win) {
-    win.close();
+    win.webContents.send('toggle-visibility');
   } else {
     createWindow();
   }
