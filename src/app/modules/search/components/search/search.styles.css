@@ -1,8 +1,11 @@
 :host {
-  display: flex;
-  flex: 0 0 55px;
-  align-items: center;
   padding: 8px;
   box-sizing: border-box;
   -webkit-app-region: drag;
+}
+
+.search__form {
+  display: flex;
+  flex: 0 0 55px;
+  align-items: center;
 }

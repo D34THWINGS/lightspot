@@ -4,6 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { SearchInputService } from '../../global/services/searchInput.service';
 import { IResult } from '../../results/interfaces/result.interface';
 
+const noop = () => {
+  // This is noop
+};
+
 @Injectable()
 export class CalculatorService {
   private $results: Observable<IResult[]>;
@@ -30,6 +34,7 @@ export class CalculatorService {
           // tslint:disable-next-line:no-eval
           const result = eval(formattedValue);
           return isNaN(result) ? [] : [{
+            action: noop,
             removeDash: true,
             title: `= ${result}`,
           }];

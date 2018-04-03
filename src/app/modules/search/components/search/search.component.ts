@@ -1,21 +1,35 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, EventEmitter, HostListener } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { remote } from 'electron';
 
-const getMousePos: () => { x: number, y: number } = remote.getGlobal('getMousePos');
+import { AppWindowService } from '../../../global/services/appWindow.service';
+import { ResultsService } from './../../../results/services/results.service';
 
 @Component({
   selector: 'search',
   styleUrls: ['search.styles.css'],
   template: `
-    <search-icon></search-icon>
-    <search-input></search-input>`,
+    <form class="search__form" [formGroup]="searchForm" (ngSubmit)="submitListener.emit()">
+      <search-icon></search-icon>
+      <search-input></search-input>
+    </form>`,
 })
 export class SearchComponent {
   private window: Electron.BrowserWindow;
   private searchInput: HTMLElement;
+  private submitListener: EventEmitter<void> = new EventEmitter();
+  private searchForm: FormGroup = new FormGroup({});
 
-  constructor(private searchElement: ElementRef) {
+  constructor(resultsService: ResultsService, appWindowService: AppWindowService) {
     this.window = remote.getCurrentWindow();
+
+    this.submitListener.withLatestFrom(resultsService.getResultsObservable())
+      .subscribe(([_, results]) => {
+        if (results.length > 0) {
+          results[0].action();
+          appWindowService.setVisibility(false);
+        }
+      });
   }
 
   @HostListener('click')

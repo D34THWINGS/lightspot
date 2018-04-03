@@ -2,6 +2,8 @@ const { app, BrowserWindow, Menu, Tray, globalShortcut } = require('electron');
 const path = require('path');
 const url = require('url');
 
+require('./app/modules/launcher/launcher');
+
 /**
  * @type {BrowserWindow}
  */
