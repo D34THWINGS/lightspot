@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
+import { ipcRenderer } from 'electron';
 import { Observable } from 'rxjs/Observable';
 
 import { SearchInputService } from '../../global/services/searchInput.service';
 import { IResult } from '../../results/interfaces/result.interface';
 
-const noop = () => {
-  // This is noop
-};
+const launchCalculator = (): void => ipcRenderer.send('@launcher:launch', '/Applications/Calculator.app');
 
 @Injectable()
 export class CalculatorService {
@@ -27,14 +26,14 @@ export class CalculatorService {
             /\d\s\d|\d\s?[a-z]|\)\s?(\(|\w)|(\)|\d)\s?\(/g,
             (match: string) => `${match.slice(0, 1)}*${match.slice(-1)}`,
           )
-          .replace(/sqrt|sin|cos|tan/ig, (match: string): string => `Math.${match}`)
+          .replace(/sqrt|sin|cos|tan|floor|ceil|round/ig, (match: string): string => `Math.${match}`)
           .replace(/\^/g, '**');
 
         try {
           // tslint:disable-next-line:no-eval
           const result = eval(formattedValue);
           return isNaN(result) ? [] : [{
-            action: noop,
+            action: launchCalculator,
             removeDash: true,
             title: `= ${result}`,
           }];

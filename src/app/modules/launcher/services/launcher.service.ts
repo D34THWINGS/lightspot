@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ipcRenderer } from 'electron';
 import * as fs from 'fs';
 import { filter, FilterResult } from 'fuzzy';
@@ -13,7 +14,7 @@ export class LauncherService {
   private $results: Observable<IResult[]>;
   private $applications: Observable<IApplication[]>;
 
-  constructor(searchInputService: SearchInputService) {
+  constructor(sanitizer: DomSanitizer, searchInputService: SearchInputService) {
     this.$applications = Observable.fromEvent(ipcRenderer, '@launcher:indexed', (e, arg) => arg);
     this.$results = searchInputService.getInputObservable()
       .combineLatest(this.$applications, (value: string, apps: IApplication[]): IResult[] =>
@@ -21,6 +22,7 @@ export class LauncherService {
           .filter((match: FilterResult<IApplication>): boolean => match.score > 0.5)
           .sort((a: FilterResult<IApplication>, b: FilterResult<IApplication>): number => b.score - a.score)
           .map((match: FilterResult<IApplication>): IResult => ({
+            icon: sanitizer.bypassSecurityTrustResourceUrl(match.original.icon),
             removeDash: false,
             title: match.original.name,
             action() {

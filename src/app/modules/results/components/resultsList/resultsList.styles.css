@@ -1,5 +1,5 @@
 :host {
   flex: 0.45;
   border-right: solid 1px #ddd;
-  overflow: hidden;
+  overflow-y: auto;
 }

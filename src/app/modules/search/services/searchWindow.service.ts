@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { remote } from 'electron';
 import { Observable } from 'rxjs/Observable';
 
-import { ResultsService } from '../../results/services/results.service';
 import { IResult } from '../../results/interfaces/result.interface';
+import { ResultsService } from '../../results/services/results.service';
 
 @Injectable()
 export class SearchWindowService {
@@ -21,10 +21,9 @@ export class SearchWindowService {
     this.originalWidth = width;
     this.originalHeight = height;
     this.$expanded = resultsService.getResultsObservable()
-      .filter((results: IResult[]): boolean => (results.length > 1) !== this.expanded)
       .debounceTime(200)
       .map((results: IResult[]) => {
-        if (results.length <= 1 && this.expanded) {
+        if (results.length <= 1) {
           this.collapseWindow();
         } else {
           this.expandWindow();
@@ -32,7 +31,8 @@ export class SearchWindowService {
 
         return this.expanded;
       })
-      .startWith(false);
+      .startWith(false)
+      .share();
   }
 
   public getExpandedObservable(): Observable<boolean> {

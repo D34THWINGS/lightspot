@@ -6,7 +6,9 @@ import { IResult } from '../../interfaces/result.interface';
   selector: 'results-list-item',
   styleUrls: ['resultsListItem.styles.css'],
   template: `
-    <div class="result-item__icon"></div>
+    <div class="result-item__icon">
+      <img [src]="result.icon" class="result-item__img" />
+    </div>
     <div class="result-item__title">{{result.title}}</div>
   `,
 })

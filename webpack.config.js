@@ -39,7 +39,7 @@ module.exports = ({ production } = {}) => ({
       test: /\.html$/,
       use: 'html-loader',
     }, {
-      test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+      test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico|icns)$/,
       use: 'file-loader?name=assets/[name].[hash].[ext]',
     }, {
       test: /\.css$/,

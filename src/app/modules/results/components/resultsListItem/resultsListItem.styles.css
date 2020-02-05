@@ -7,6 +7,13 @@
   flex: 0 0 40px;
 }
 
+.result-item__img {
+  display: block;
+  margin-left: 8px;
+  max-width: 20px;
+  max-height: 20px;
+}
+
 .result-item__title {
   flex: 1;
   padding: 6px;
